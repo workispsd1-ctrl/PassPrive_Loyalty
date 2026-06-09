@@ -125,6 +125,12 @@
     outline-offset: 2px;
   }
 
+  /* Style all native select dropdown options for dark theme consistency */
+  select option {
+    background-color: #0d0d11 !important;
+    color: var(--color-foreground) !important;
+  }
+
   /* Honor users who prefer reduced motion */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
