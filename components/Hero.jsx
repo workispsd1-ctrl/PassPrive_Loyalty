@@ -53,18 +53,18 @@ const page = () => {
 
           <div className="mx-auto mt-9 w-full max-w-md sm:w-fit sm:max-w-none lg:mx-0">
             <div className="flex flex-col gap-3 sm:flex-row">
-              <button className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary-600 sm:w-auto">
+              <a href="/signup" className="inline-flex w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary-600 sm:w-auto justify-center">
                 Start Free Trial
-              </button>
-              <button className="w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-foreground transition-colors hover:bg-muted sm:w-auto">
+              </a>
+              <a href="/signup?type=customer" className="inline-flex w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-foreground transition-colors hover:bg-muted sm:w-auto justify-center">
                 I&apos;m a customer
-              </button>
+              </a>
             </div>
 
             <p className="mt-2 text-center text-sm text-muted-foreground">
               Already have a business?{' '}
               <a
-                href="#"
+                href="/signin"
                 className="font-semibold text-primary underline-offset-4 hover:underline"
               >
                 Sign In
@@ -138,9 +138,8 @@ const page = () => {
               {Array.from({ length: 9 }).map((_, i) => (
                 <span
                   key={i}
-                  className={`h-2.5 w-2.5 rounded-xs ${
-                    [0, 2, 4, 6, 8].includes(i) ? 'bg-foreground' : 'bg-primary'
-                  }`}
+                  className={`h-2.5 w-2.5 rounded-xs ${[0, 2, 4, 6, 8].includes(i) ? 'bg-foreground' : 'bg-primary'
+                    }`}
                 />
               ))}
             </div>
@@ -148,7 +147,7 @@ const page = () => {
         </div>
       </section>
 
-    
+
     </main>
   )
 }
