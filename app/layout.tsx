@@ -33,7 +33,7 @@ export default function RootLayout({
       lang="en"
       className={`h-full ${albertSans.variable} ${familjenGrotesk.variable} ${ibmPlexMono.variable}`}
     >
-      <body className="min-h-screen flex flex-col text-foreground font-sans antialiased">
+      <body className="min-h-screen flex flex-col text-foreground font-sans antialiased" suppressHydrationWarning>
         <div aria-hidden className="app-background pointer-events-none fixed inset-0 -z-10" />
         {children}
       </body>
