@@ -1,6 +1,24 @@
 'use client'
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+
+// Animation variants matching Home/Explore
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const } },
+}
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const } },
+}
 
 type ToggleSwitchProps = {
   checked: boolean
@@ -15,32 +33,15 @@ function ToggleSwitch({ checked, onChange, id }: ToggleSwitchProps) {
       role="switch"
       aria-checked={checked}
       onClick={onChange}
-      className="relative flex-shrink-0 focus:outline-none"
-      style={{
-        width: '48px',
-        height: '28px',
-        borderRadius: '14px',
-        background: checked
-          ? 'linear-gradient(135deg, #f97316, #ea580c)'
-          : 'rgba(255,255,255,0.12)',
-        boxShadow: checked ? '0 0 14px rgba(249,115,22,0.45)' : 'none',
-        border: checked ? 'none' : '1px solid rgba(255,255,255,0.15)',
-        transition: 'all 0.25s ease',
-      }}
+      className={`relative flex-shrink-0 h-5 w-9 rounded-full p-0.5 transition-colors duration-250 cursor-pointer focus:outline-none
+        ${checked ? 'bg-primary' : 'bg-zinc-800 border border-white/10'}
+      `}
     >
-      <span
-        style={{
-          position: 'absolute',
-          top: '3px',
-          width: '22px',
-          height: '22px',
-          borderRadius: '50%',
-          background: '#fff',
-          boxShadow: '0 1px 5px rgba(0,0,0,0.30)',
-          transform: checked ? 'translateX(23px)' : 'translateX(3px)',
-          transition: 'transform 0.25s ease',
-          display: 'block',
-        }}
+      <motion.span
+        layout
+        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+        className="block h-3.5 w-3.5 rounded-full bg-white shadow-md"
+        animate={{ x: checked ? 16 : 0 }}
       />
     </button>
   )
@@ -57,20 +58,20 @@ type SettingRowProps = {
 
 function SettingRow({ label, sublabel, checked, onChange, id, isLast }: SettingRowProps) {
   return (
-    <div
-      className="flex items-center justify-between px-5 py-4"
-      style={{
-        borderBottom: isLast ? 'none' : '1px solid rgba(255,255,255,0.06)',
-      }}
+    <motion.div
+      variants={fadeUp}
+      className={`flex items-center justify-between px-4 py-4.5 border-white/5
+        ${isLast ? '' : 'border-b'}
+      `}
     >
-      <div className="flex-1 pr-4">
-        <p className="text-sm font-semibold text-white">{label}</p>
-        <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.42)' }}>
+      <div className="flex-1 pr-4 min-w-0">
+        <p className="text-sm font-bold text-white leading-tight">{label}</p>
+        <p className="text-xs text-white/40 mt-1 leading-normal">
           {sublabel}
         </p>
       </div>
       <ToggleSwitch id={id} checked={checked} onChange={onChange} />
-    </div>
+    </motion.div>
   )
 }
 
@@ -92,45 +93,37 @@ export default function NotificationsSettingsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-24">
-      {/* ── Header ── */}
-      <div
-        style={{
-          background: 'linear-gradient(160deg, #1a0a00 0%, #2d1200 50%, #0d0600 100%)',
-        }}
-        className="px-5 pt-10 pb-6"
+    <div className="flex flex-col min-h-screen">
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        animate="show"
+        className="flex-1 px-5 pt-12 pb-24 space-y-6"
       >
-        <div className="flex items-center gap-4">
-          <button
+        {/* Header with back arrow */}
+        <motion.div variants={fadeUp} className="flex items-center gap-4">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => router.back()}
-            className="h-9 w-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all"
-            style={{
-              background: 'rgba(255,255,255,0.07)',
-              border: '1px solid rgba(255,255,255,0.10)',
-            }}
+            className="h-10 w-10 rounded-2xl flex items-center justify-center bg-zinc-900/60 border border-white/10 text-white cursor-pointer"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4 text-white">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-4 w-4">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
-          </button>
+          </motion.button>
           <div>
-            <h1 className="text-xl font-bold text-white">Notifications</h1>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.40)' }}>
+            <h1 className="text-4xl font-bold tracking-tight text-white leading-none">Notifications</h1>
+            <p className="text-xs text-white/45 mt-1.5">
               Control what alerts you receive
             </p>
           </div>
-        </div>
-      </div>
+        </motion.div>
 
-      {/* ── Content ── */}
-      <div className="flex-1 px-5 py-5">
         {/* Settings Card */}
-        <div
-          className="rounded-2xl overflow-hidden"
-          style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.09)',
-          }}
+        <motion.div
+          variants={fadeUp}
+          className="rounded-3xl border border-white/10 bg-zinc-900/40 overflow-hidden backdrop-blur-sm flex flex-col"
         >
           <SettingRow
             id="push-notif"
@@ -168,30 +161,32 @@ export default function NotificationsSettingsPage() {
             onChange={() => setPromotions((v) => !v)}
             isLast
           />
-        </div>
+        </motion.div>
 
-        {/* Info note */}
-        <p className="text-xs text-center mt-4" style={{ color: 'rgba(255,255,255,0.28)' }}>
+        {/* Info Note */}
+        <motion.p
+          variants={fadeUp}
+          className="text-center text-[10px] text-white/20 tracking-wider"
+        >
           You can change these settings at any time
-        </p>
+        </motion.p>
 
         {/* Save Button */}
-        <button
+        <motion.button
+          variants={fadeUp}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handleSave}
-          className="w-full mt-6 py-4 rounded-2xl text-sm font-bold tracking-wide transition-all duration-200"
-          style={{
-            background: saved
-              ? 'linear-gradient(135deg, #16a34a, #15803d)'
-              : 'linear-gradient(135deg, #f97316, #ea580c)',
-            color: '#fff',
-            boxShadow: saved
-              ? '0 4px 20px rgba(22,163,74,0.40)'
-              : '0 4px 20px rgba(249,115,22,0.40)',
-          }}
+          className={`w-full py-4 rounded-2xl text-sm font-bold tracking-wide transition-all cursor-pointer border shadow-lg
+            ${saved
+              ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 shadow-emerald-500/5'
+              : 'bg-primary/15 border-primary/30 text-primary shadow-primary/5 hover:bg-primary/20'
+            }
+          `}
         >
           {saved ? '✓ Saved!' : 'Save Settings'}
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </div>
   )
 }

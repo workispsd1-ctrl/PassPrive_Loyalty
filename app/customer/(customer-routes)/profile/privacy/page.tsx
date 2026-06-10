@@ -1,126 +1,183 @@
 'use client'
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+
+// Animation variants matching Home/Explore
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const } },
+}
+
+type ToggleSwitchProps = {
+  checked: boolean
+  onChange: () => void
+  id: string
+}
+
+function ToggleSwitch({ checked, onChange, id }: ToggleSwitchProps) {
+  return (
+    <button
+      id={id}
+      role="switch"
+      aria-checked={checked}
+      onClick={onChange}
+      className={`relative flex-shrink-0 h-5 w-9 rounded-full p-0.5 transition-colors duration-250 cursor-pointer focus:outline-none
+        ${checked ? 'bg-primary' : 'bg-zinc-800 border border-white/10'}
+      `}
+    >
+      <motion.span
+        layout
+        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+        className="block h-3.5 w-3.5 rounded-full bg-white shadow-md"
+        animate={{ x: checked ? 16 : 0 }}
+      />
+    </button>
+  )
+}
+
+type SettingRowProps = {
+  label: string
+  sublabel: string
+  checked: boolean
+  onChange: () => void
+  id: string
+  isLast?: boolean
+}
+
+function SettingRow({ label, sublabel, checked, onChange, id, isLast }: SettingRowProps) {
+  return (
+    <motion.div
+      variants={fadeUp}
+      className={`flex items-center justify-between px-4 py-4.5 border-white/5
+        ${isLast ? '' : 'border-b'}
+      `}
+    >
+      <div className="flex-1 pr-4 min-w-0">
+        <p className="text-sm font-bold text-white leading-tight">{label}</p>
+        <p className="text-xs text-white/40 mt-1 leading-normal">
+          {sublabel}
+        </p>
+      </div>
+      <ToggleSwitch id={id} checked={checked} onChange={onChange} />
+    </motion.div>
+  )
+}
 
 export default function PrivacySecurityPage() {
   const router = useRouter()
   const [shareLocation, setShareLocation] = useState(true)
   const [publicProfile, setPublicProfile] = useState(true)
   const [analytics, setAnalytics] = useState(true)
+  const [saved, setSaved] = useState(false)
 
   const handleSave = () => {
-    // Save settings logic here
-    router.back()
+    setSaved(true)
+    setTimeout(() => {
+      setSaved(false)
+      router.back()
+    }, 800)
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-20">
-      {/* Header */}
-      <div className="flex items-center gap-4 px-4 py-4 sm:px-6 border-b border-border">
-        <button onClick={() => router.back()} className="text-muted-foreground hover:text-foreground">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <h1 className="text-xl font-bold text-foreground">Privacy & Security</h1>
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 px-4 py-6 sm:px-6">
-        <div className="space-y-4">
-          {/* Share Location */}
-          <div className="flex items-center justify-between p-4 rounded-lg hover:bg-muted/50 transition-colors">
-            <div>
-              <p className="font-semibold text-foreground">Share Location</p>
-              <p className="text-sm text-muted-foreground">For nearby places & QR verification</p>
-            </div>
-            <div className="relative inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={shareLocation}
-                onChange={() => setShareLocation(!shareLocation)}
-                className="sr-only"
-              />
-              <div className={`h-6 w-11 rounded-full transition-colors ${
-                shareLocation ? 'bg-primary' : 'bg-gray-300'
-              }`}>
-                <div className={`h-5 w-5 rounded-full bg-white transition-transform transform ${
-                  shareLocation ? 'translate-x-5' : 'translate-x-0.5'
-                } mt-0.5`} />
-              </div>
-            </div>
+    <div className="flex flex-col min-h-screen">
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        animate="show"
+        className="flex-1 px-5 pt-12 pb-24 space-y-6"
+      >
+        {/* Header with back arrow */}
+        <motion.div variants={fadeUp} className="flex items-center gap-4">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.back()}
+            className="h-10 w-10 rounded-2xl flex items-center justify-center bg-zinc-900/60 border border-white/10 text-white cursor-pointer"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-4 w-4">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+          </motion.button>
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight text-white leading-none">Privacy</h1>
+            <p className="text-xs text-white/45 mt-1.5">
+              Manage security & data sharing
+            </p>
           </div>
+        </motion.div>
 
-          {/* Public Profile */}
-          <div className="flex items-center justify-between p-4 rounded-lg hover:bg-muted/50 transition-colors">
-            <div>
-              <p className="font-semibold text-foreground">Public Profile</p>
-              <p className="text-sm text-muted-foreground">Let others see your achievements</p>
-            </div>
-            <div className="relative inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={publicProfile}
-                onChange={() => setPublicProfile(!publicProfile)}
-                className="sr-only"
-              />
-              <div className={`h-6 w-11 rounded-full transition-colors ${
-                publicProfile ? 'bg-primary' : 'bg-gray-300'
-              }`}>
-                <div className={`h-5 w-5 rounded-full bg-white transition-transform transform ${
-                  publicProfile ? 'translate-x-5' : 'translate-x-0.5'
-                } mt-0.5`} />
-              </div>
-            </div>
-          </div>
+        {/* Settings Card */}
+        <motion.div
+          variants={fadeUp}
+          className="rounded-3xl border border-white/10 bg-zinc-900/40 overflow-hidden backdrop-blur-sm flex flex-col"
+        >
+          <SettingRow
+            id="share-loc"
+            label="Share Location"
+            sublabel="For finding nearby venues & verification"
+            checked={shareLocation}
+            onChange={() => setShareLocation(!shareLocation)}
+          />
+          <SettingRow
+            id="public-profile"
+            label="Public Profile"
+            sublabel="Let others see your loyalty milestones"
+            checked={publicProfile}
+            onChange={() => setPublicProfile(!publicProfile)}
+          />
+          <SettingRow
+            id="analytics-opt"
+            label="Analytics"
+            sublabel="Anonymously help us improve app features"
+            checked={analytics}
+            onChange={() => setAnalytics(!analytics)}
+            isLast
+          />
+        </motion.div>
 
-          {/* Analytics */}
-          <div className="flex items-center justify-between p-4 rounded-lg hover:bg-muted/50 transition-colors">
-            <div>
-              <p className="font-semibold text-foreground">Analytics</p>
-              <p className="text-sm text-muted-foreground">Help improve the app</p>
-            </div>
-            <div className="relative inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={analytics}
-                onChange={() => setAnalytics(!analytics)}
-                className="sr-only"
-              />
-              <div className={`h-6 w-11 rounded-full transition-colors ${
-                analytics ? 'bg-primary' : 'bg-gray-300'
-              }`}>
-                <div className={`h-5 w-5 rounded-full bg-white transition-transform transform ${
-                  analytics ? 'translate-x-5' : 'translate-x-0.5'
-                } mt-0.5`} />
-              </div>
-            </div>
-          </div>
-
-          {/* Data Protection Info */}
-          <div className="mt-8 p-4 rounded-lg bg-primary/5 border border-primary/20">
-            <div className="flex items-start gap-3">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5 text-primary flex-shrink-0 mt-0.5">
+        {/* Data Protection Info */}
+        <motion.div
+          variants={fadeUp}
+          className="rounded-3xl border border-primary/20 bg-primary/5 p-5 backdrop-blur-sm"
+        >
+          <div className="flex items-start gap-3.5">
+            <div className="h-8 w-8 rounded-xl flex-shrink-0 flex items-center justify-center bg-primary/10 border border-primary/20 text-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-4.5 w-4.5">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
-              <div>
-                <p className="font-semibold text-foreground">Data Protection</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Your data is encrypted and securely stored. We never share your personal information with third parties without your consent.
-                </p>
-              </div>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white leading-tight">Data Protection</p>
+              <p className="text-xs text-white/40 mt-1 leading-relaxed">
+                Your data is encrypted and securely stored. We never sell or share your personal information with third parties.
+              </p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Save Button */}
-        <button
+        <motion.button
+          variants={fadeUp}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handleSave}
-          className="w-full mt-8 px-6 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
+          className={`w-full py-4 rounded-2xl text-sm font-bold tracking-wide transition-all cursor-pointer border shadow-lg
+            ${saved
+              ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 shadow-emerald-500/5'
+              : 'bg-primary/15 border-primary/30 text-primary shadow-primary/5 hover:bg-primary/20'
+            }
+          `}
         >
-          Save Settings
-        </button>
-      </div>
+          {saved ? '✓ Saved!' : 'Save Settings'}
+        </motion.button>
+      </motion.div>
     </div>
   )
 }
