@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -106,8 +106,12 @@ export default function Sidebar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
 
+  useEffect(() => {
+    setCollapsed(window.innerWidth < 768)
+  }, [])
+
   return (
-    <aside className='relative flex shrink-0 flex-col bg-primary-600 rounded-r-4xl'>
+    <aside className='relative flex shrink-0 flex-col bg-neutral-900 rounded-r-4xl'>
       <button
         type='button'
         onClick={() => setCollapsed((c) => !c)}
@@ -132,54 +136,28 @@ export default function Sidebar() {
       >
         {/* Logo */}
         <div
-          className={`flex flex-col gap-2 py-6 justify-center items-center text-center ${
+          className={`flex flex-col gap-3 py-7 justify-center items-center text-center border-b border-neutral-800 ${
             collapsed ? 'px-3' : 'px-5'
           }`}
         >
-          <div className='flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/15'>
-            <svg
-              viewBox='0 0 40 40'
-              className='h-9 w-9'
-            >
-              <circle
-                cx='20'
-                cy='20'
-                r='18'
-                fill='white'
-                fillOpacity='0.9'
-              />
-              <circle
-                cx='20'
-                cy='14'
-                r='5'
-                fill='var(--color-primary-700)'
-              />
-              <ellipse
-                cx='20'
-                cy='28'
-                rx='8'
-                ry='6'
-                fill='var(--color-primary-700)'
-              />
-              <circle
-                cx='25'
-                cy='17'
-                r='3'
-                fill='var(--color-primary-400)'
-                opacity='0.7'
-              />
+          <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-neutral-800 ring-1 ring-neutral-700'>
+            <svg viewBox='0 0 40 40' className='h-8 w-8'>
+              <circle cx='20' cy='20' r='18' fill='white' fillOpacity='0.9' />
+              <circle cx='20' cy='14' r='5' fill='#ea580c' />
+              <ellipse cx='20' cy='28' rx='8' ry='6' fill='#ea580c' />
+              <circle cx='25' cy='17' r='3' fill='#fb923c' opacity='0.7' />
             </svg>
           </div>
 
           {!collapsed && (
             <div className='text-center'>
-              <p className='text-[22px] font-bold leading-none tracking-tight text-white'>
+              <p className='text-[20px] font-bold leading-none tracking-tight text-white'>
                 PassPrive
-                <sup className='ml-0.5 text-[11px] font-extrabold uppercase tracking-widest'>
+                <sup className='ml-0.5 text-[10px] font-extrabold uppercase tracking-widest text-orange-400'>
                   Loyalty
                 </sup>
               </p>
-              <p className='mt-1 text-[11px] font-semibold uppercase tracking-[0.15em] text-white/70'>
+              <p className='mt-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-500'>
                 TEST CAFE
               </p>
             </div>
@@ -188,7 +166,7 @@ export default function Sidebar() {
 
         {/* Nav */}
         <nav
-          className={`flex flex-1 flex-col gap-0.5 ${collapsed ? 'px-2' : 'px-3'}`}
+          className={`flex flex-1 flex-col gap-0.5 py-3 ${collapsed ? 'px-2' : 'px-3'}`}
         >
           {navItems.map((item) => {
             const active = pathname === item.href;
@@ -198,11 +176,11 @@ export default function Sidebar() {
                 href={item.href}
                 title={collapsed ? item.label : undefined}
                 className={[
-                  'flex items-center gap-2.5 rounded-lg py-2.5 text-sm text-white no-underline transition-colors',
+                  'flex items-center gap-3 rounded-lg py-2.5 text-sm no-underline transition-all duration-150',
                   collapsed ? 'justify-center px-2' : 'px-3',
                   active
-                    ? 'border-l-[3px] border-l-white bg-white/20 font-semibold'
-                    : 'border-l-[3px] border-l-transparent font-normal hover:bg-white/10',
+                    ? 'bg-neutral-800 text-orange-400 font-semibold border-l-2 border-l-orange-400'
+                    : 'text-neutral-400 font-normal border-l-2 border-l-transparent hover:bg-neutral-800 hover:text-neutral-200',
                 ].join(' ')}
               >
                 {item.icon}
@@ -217,11 +195,7 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {!collapsed && (
-          <p className='px-5 py-4 text-[11px] text-white/40'>
-            Version 2.9.9 (369)
-          </p>
-        )}
+        
       </div>
     </aside>
   );

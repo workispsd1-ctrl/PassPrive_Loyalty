@@ -111,15 +111,16 @@ const Pricing = () => {
                 <span className="text-sm text-muted-foreground">/month</span>
               </div>
 
-              <button
-                className={`mt-6 w-full rounded-md px-5 py-2.5 text-sm font-semibold transition-colors ${
+              <a
+                href="/signup"
+                className={`mt-6 w-full inline-flex justify-center rounded-md px-5 py-2.5 text-sm font-semibold transition-colors ${
                   plan.featured
                     ? 'bg-primary text-primary-foreground hover:bg-primary-600'
                     : 'border border-border bg-card text-foreground hover:bg-muted'
                 }`}
               >
                 {plan.cta}
-              </button>
+              </a>
 
               <div className="my-6 h-px w-full bg-border" />
 
