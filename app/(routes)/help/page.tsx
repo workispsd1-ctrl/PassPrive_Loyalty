@@ -415,35 +415,31 @@ export default function HelpPage() {
   )
 
   return (
-    <>
-      {/* Header */}
-      <header className="flex h-16 items-center justify-between border-b border-border bg-card/40 px-6 backdrop-blur-xl shrink-0 z-10">
-        <div>
-          <h1 className="text-base font-semibold text-foreground">Help & Support</h1>
-          <p className="text-xs text-muted-foreground">Bloom Café · Assistance and guidance</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-accent px-3 py-1 text-xs font-medium text-accent-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            Live
-          </span>
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-primary/15 text-sm font-semibold text-primary">B</span>
-        </div>
-      </header>
+    <div className="flex flex-col overflow-auto">
+      {/* Page header */}
+      <div className="flex items-start justify-between px-4 pt-5 pb-2 sm:px-6 sm:pt-8 sm:pb-3 md:px-8">
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Help & Support</h1>
+        <button
+          type="button"
+          aria-label="Profile"
+          className="grid h-9 w-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-card"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+          </svg>
+        </button>
+      </div>
 
-      {/* Main Container */}
-      <main className="flex-1 space-y-8 p-6 overflow-auto">
+      <div className="flex flex-col gap-4 px-4 pb-6 sm:gap-5 sm:px-6 sm:pb-8 md:px-8">
 
         {/* Render View 1: Main Support Home */}
         {currentView === 'main' && (
           <>
             {/* Intro Banner */}
-            <div className="max-w-4xl">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">Help & Support</h2>
-              <p className="text-sm text-muted-foreground mt-2">
-                Find answers, get support, and make the most of your PassPrivé loyalty program.
-              </p>
-            </div>
+            <p className="text-sm text-muted-foreground">
+              Find answers, get support, and make the most of your PassPrivé loyalty program.
+            </p>
 
             {/* Section 1: Learn about the platform */}
             <section className="space-y-4">
@@ -1962,7 +1958,7 @@ export default function HelpPage() {
           </div>
         )}
 
-      </main>
+      </div>
 
       {/* Video Player Modal */}
       {videoModal && videoModal.isOpen && (
@@ -2003,6 +1999,6 @@ export default function HelpPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }

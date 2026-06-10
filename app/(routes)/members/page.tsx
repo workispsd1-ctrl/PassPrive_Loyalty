@@ -337,30 +337,23 @@ export default function MembersPage() {
   }
 
   return (
-    <>
-      {/* Header (matches dashboard look & feel) */}
-      <header className="flex h-16 items-center justify-between border-b border-border bg-card/40 px-6 backdrop-blur-xl shrink-0 z-10">
-        <div>
-          <h1 className="text-base font-semibold text-foreground">Members</h1>
-          <p className="text-xs text-muted-foreground">Bloom Café · View and manage your members</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => setIsDemoMode(!isDemoMode)}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold cursor-pointer transition-all ${
-              isDemoMode 
-                ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30' 
-                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-            }`}
-          >
-            <span className={`h-1.5 w-1.5 rounded-full ${isDemoMode ? 'bg-yellow-400' : 'bg-emerald-400'}`} />
-            {isDemoMode ? 'Demo Mode' : 'Live Mode'}
-          </button>
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-primary/15 text-sm font-semibold text-primary">B</span>
-        </div>
-      </header>
+    <div className="flex flex-col overflow-auto">
+      {/* Page header */}
+      <div className="flex items-start justify-between px-4 pt-5 pb-4 sm:px-6 sm:pt-8 sm:pb-5 md:px-8">
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Members</h1>
+        <button
+          type="button"
+          aria-label="Profile"
+          className="grid h-9 w-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-card"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+          </svg>
+        </button>
+      </div>
 
-      <main className="flex-1 space-y-6 p-6 overflow-auto">
+      <div className="flex flex-col gap-4 px-4 pb-6 sm:gap-5 sm:px-6 sm:pb-8 md:px-8">
         {/* Demo Mode alert banner */}
         {isDemoMode && (
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 px-5 py-3.5 backdrop-blur-xl">
@@ -992,7 +985,7 @@ export default function MembersPage() {
           </div>
 
         </div>
-      </main>
+      </div>
 
       {/* ----------------- ACTION MODALS ----------------- */}
 
@@ -1329,6 +1322,6 @@ export default function MembersPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
