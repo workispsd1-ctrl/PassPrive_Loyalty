@@ -5,12 +5,12 @@ export default function CustomerScanPage() {
   const [isScanning, setIsScanning] = useState(false)
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-gradient-to-r from-primary/10 to-primary/5 border-b border-border px-4 py-5 sm:px-6 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 bg-linear-to-r from-primary/10 to-primary/5 border-b border-border px-4 py-5 sm:px-6 backdrop-blur-xl">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Scan</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Scan</h1>
             <p className="text-sm text-muted-foreground mt-1">Tap to start scanning QR codes</p>
           </div>
           <button

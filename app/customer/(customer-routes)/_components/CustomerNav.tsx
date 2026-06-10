@@ -1,80 +1,68 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { Home, Compass, ScanQrCode, Gift, User } from 'lucide-react'
 
-const CustomerNav = () => {
+const navItems = [
+  { label: 'Home',    href: '/customer/home',    Icon: Home },
+  { label: 'Explore', href: '/customer/explore',  Icon: Compass },
+  { label: 'Scan',    href: '/customer/scan',     Icon: ScanQrCode, special: true },
+  { label: 'Rewards', href: '/customer/rewards',  Icon: Gift },
+  { label: 'Profile', href: '/customer/profile',  Icon: User },
+]
+
+export default function CustomerNav() {
   const pathname = usePathname()
 
-  const navItems = [
-    {
-      label: 'Home',
-      href: '/customer/home',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-        </svg>
-      ),
-    },
-    {
-      label: 'Explore',
-      href: '/customer/explore',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01" />
-        </svg>
-      ),
-    },
-    {
-      label: 'Scan',
-      href: '/customer/scan',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
-          <rect x="3" y="3" width="18" height="18" rx="2" />
-          <path d="M7 7h4v4H7zM13 7h4v4h-4zM7 13h4v4H7zM13 13h4v4h-4z" />
-        </svg>
-      ),
-    },
-    {
-      label: 'Rewards',
-      href: '/customer/rewards',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-6 w-6">
-          <path d="M6 9V7a2 2 0 012-2h8a2 2 0 012 2v2M6 9a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002-2v-6a2 2 0 00-2-2" />
-          <path d="M9 13h6" />
-        </svg>
-      ),
-    },
-    {
-      label: 'Profile',
-      href: '/customer/profile',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-        </svg>
-      ),
-    },
-  ]
-
   return (
-    <nav className="fixed bottom-0 left-0 right-0 border-t border-border bg-card/95 backdrop-blur-xl">
-      <div className="flex items-center justify-around">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.includes(item.href.split('/').pop() || '')
+    <nav className="fixed bottom-0 left-0 right-0 flex justify-center pointer-events-none pb-5 z-50">
+      {/* Ambient glow bloom */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-96 h-24 bg-primary/10 blur-3xl rounded-full pointer-events-none" />
+
+      <div className="pointer-events-auto w-[92vw] max-w-md flex items-center justify-between px-3 py-2 rounded-[28px] bg-[#0f0f12]/85 border border-white/8 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.04)]">
+        {navItems.map(({ label, href, Icon, special }) => {
+          const segment = href.split('/').pop() ?? ''
+          const active = pathname === href || pathname.startsWith('/customer/' + segment + '/')
+
+          if (special) {
+            return (
+              <Link key={href} href={href} className="flex-1 flex justify-center">
+                <motion.div
+                  whileHover={{ scale: 1.07 }}
+                  whileTap={{ scale: 0.91 }}
+                  className="relative flex h-13 w-13 items-center justify-center rounded-full bg-linear-to-br from-primary-400 to-primary-600 text-white shadow-[0_0_24px_rgba(249,115,22,0.55)]"
+                  style={{ width: '3.25rem', height: '3.25rem' }}
+                >
+                  <Icon size={22} strokeWidth={2} />
+                  <span className="absolute inset-0 rounded-full animate-pulse-glow" />
+                </motion.div>
+              </Link>
+            )
+          }
+
           return (
-            <Link key={item.href} href={item.href} className="flex-1">
-              <div
-                className={`flex flex-col items-center justify-center gap-1 py-3 px-4 transition-all ${
-                  isActive
-                    ? 'text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
+            <Link key={href} href={href} className="flex-1">
+              <motion.div
+                whileTap={{ scale: 0.87 }}
+                className="relative flex flex-col items-center justify-center gap-1 px-2 py-2.5 rounded-[20px]"
               >
-                <div className={isActive ? 'text-primary' : ''}>{item.icon}</div>
-                <span className={`text-xs font-medium ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
-                  {item.label}
+                {active && (
+                  <motion.div
+                    layoutId="nav-pill"
+                    className="absolute inset-0 rounded-[20px] bg-primary/13"
+                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                  />
+                )}
+
+                <div className={`relative z-10 transition-colors ${active ? 'text-primary' : 'text-muted-foreground'}`}>
+                  <Icon size={20} strokeWidth={active ? 2.2 : 1.8} />
+                </div>
+
+                <span className={`relative z-10 text-[9px] font-semibold tracking-widest uppercase transition-colors ${active ? 'text-primary' : 'text-muted-foreground/55'}`}>
+                  {label}
                 </span>
-              </div>
+              </motion.div>
             </Link>
           )
         })}
@@ -82,5 +70,3 @@ const CustomerNav = () => {
     </nav>
   )
 }
-
-export default CustomerNav

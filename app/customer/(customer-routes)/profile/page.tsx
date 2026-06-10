@@ -2,12 +2,12 @@
 
 export default function CustomerProfilePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-gradient-to-r from-primary/10 to-primary/5 border-b border-border px-4 py-5 sm:px-6 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 bg-linear-to-r from-primary/10 to-primary/5 border-b border-border px-4 py-5 sm:px-6 backdrop-blur-xl">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Profile</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Profile</h1>
             <p className="text-sm text-muted-foreground mt-1">Manage your account</p>
           </div>
           <button
@@ -28,15 +28,15 @@ export default function CustomerProfilePage() {
       <div className="flex-1 px-4 py-6 sm:px-6">
         <div className="space-y-4 pb-10">
           {/* Profile Header */}
-          <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-primary/5 p-6">
+          <div className="rounded-2xl border border-primary/30 bg-linear-to-br from-primary/10 to-primary/5 p-6">
             <div className="flex items-start gap-4">
-              <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+              <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
                 <svg viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8 text-primary">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-foreground">Revoori Varun</h3>
+                <h3 className="text-xl font-bold tracking-tight text-foreground">Revoori Varun</h3>
                 <p className="text-sm text-muted-foreground mt-1">varun@example.com</p>
                 <p className="text-xs text-muted-foreground/70 mt-1">Member since 2024</p>
               </div>
