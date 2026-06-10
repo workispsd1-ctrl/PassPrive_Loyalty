@@ -21,14 +21,14 @@ const FinalCta = () => {
 
             <div className="mx-auto mt-9 w-full max-w-md sm:w-fit sm:max-w-none">
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <button className="w-full rounded-md bg-primary px-7 py-3 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary-600 sm:w-auto">
+                <a href="/signup" className="inline-flex w-full rounded-md bg-primary px-7 py-3 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary-600 sm:w-auto justify-center">
                   Start Your Free Trial
-                </button>
+                </a>
               </div>
               <p className="mt-4 text-center text-sm text-muted-foreground">
                 Already have a business?{' '}
                 <a
-                  href="#"
+                  href="/signin"
                   className="font-semibold text-primary underline-offset-4 hover:underline"
                 >
                   Sign In
