@@ -166,7 +166,7 @@ export default function CustomerHomePage() {
           <div className="flex items-start justify-between">
             <motion.div variants={fadeUp}>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary/70">{greeting}</p>
-              <h1 className="mt-1 text-3xl font-bold tracking-tight text-foreground leading-tight">Krittika Tiwari</h1>
+              <h1 className="mt-1 text-4xl font-bold tracking-normal  text-foreground leading-tight">Krittika Tiwari</h1>
               <p className="mt-1 text-sm text-muted-foreground">Track your rewards &amp; earn more</p>
             </motion.div>
 

@@ -152,10 +152,10 @@ export default function CustomerExplorePage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.45, ease: [0.22, 1, 0.36, 1] as const }}
-          className="overflow-hidden rounded-2xl border border-border/50"
+          className="overflow-hidden rounded-2xl border border-border/50 bg-zinc-800/20"
         >
           {/* Table header */}
-          <div className="flex items-center justify-between border-b border-border/40 bg-zinc-900/70 px-4 py-3">
+          <div className="flex items-center justify-between border-b border-border/40 bg-zinc-500/10 px-4 py-3">
             <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Business Name</span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status</span>
           </div>
@@ -176,7 +176,7 @@ export default function CustomerExplorePage() {
                   <Link href={`/customer/explore/${biz.id}`} className="no-underline">
                     <motion.div
                       whileTap={{ scale: 0.995 }}
-                      className="flex cursor-pointer items-center gap-3 px-4 py-3.5 transition-colors hover:bg-white/2"
+                      className="flex cursor-pointer items-center gap-3 px-4 py-3.5 transition-colors hover:bg-muted/30"
                     >
                       {/* Icon */}
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-800 text-xl">
