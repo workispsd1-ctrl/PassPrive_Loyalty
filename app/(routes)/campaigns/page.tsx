@@ -1,51 +1,74 @@
 import React from 'react'
 
 const LockIcon = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4.5 w-4.5 text-warning">
+  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4.5 w-4.5 text-neutral-500">
     <path d="M12 1a5 5 0 0 0-5 5v3H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V11a2 2 0 0 0-2-2h-2V6a5 5 0 0 0-5-5zm3 8H9V6a3 3 0 0 1 6 0v3z" />
   </svg>
 )
 
 const BirthdayCakeIllustration = () => (
   <svg viewBox="0 0 100 90" className="h-18 w-22" fill="none">
-    <rect x="10" y="48" width="80" height="34" rx="4" fill="rgba(249,115,22,0.12)" stroke="rgba(249,115,22,0.35)" strokeWidth="1.5" />
-    <rect x="20" y="56" width="12" height="16" rx="2" fill="rgba(255,255,255,0.06)" stroke="rgba(249,115,22,0.3)" strokeWidth="1.2" />
-    <rect x="44" y="56" width="12" height="16" rx="2" fill="rgba(255,255,255,0.06)" stroke="rgba(249,115,22,0.3)" strokeWidth="1.2" />
-    <rect x="68" y="56" width="12" height="16" rx="2" fill="rgba(255,255,255,0.06)" stroke="rgba(249,115,22,0.3)" strokeWidth="1.2" />
-    <rect x="10" y="43" width="80" height="9" rx="3" fill="rgba(249,115,22,0.18)" stroke="rgba(249,115,22,0.35)" strokeWidth="1.2" />
-    <line x1="50" y1="43" x2="50" y2="25" stroke="rgba(249,115,22,0.5)" strokeWidth="2" strokeLinecap="round" />
-    <ellipse cx="50" cy="22" rx="3" ry="5" fill="#f97316" opacity="0.9" />
-    <ellipse cx="50" cy="18" rx="2" ry="3" fill="#fb923c" opacity="0.7" />
+    {/* Cake body */}
+    <rect x="10" y="48" width="80" height="34" rx="4" fill="#ec4899" opacity="0.8" />
+    {/* Windows */}
+    <rect x="20" y="56" width="12" height="16" rx="2" fill="#fdf2f8" opacity="0.35" />
+    <rect x="44" y="56" width="12" height="16" rx="2" fill="#fdf2f8" opacity="0.35" />
+    <rect x="68" y="56" width="12" height="16" rx="2" fill="#fdf2f8" opacity="0.35" />
+    {/* Frosting */}
+    <rect x="10" y="43" width="80" height="9" rx="3" fill="#f9a8d4" opacity="0.95" />
+    {/* Candle */}
+    <rect x="47" y="27" width="6" height="16" rx="2" fill="#f472b6" opacity="0.9" />
+    {/* Flame */}
+    <ellipse cx="50" cy="23" rx="3" ry="5" fill="#fbbf24" opacity="0.95" />
+    <ellipse cx="50" cy="21" rx="1.5" ry="2.5" fill="#fef9c3" opacity="0.9" />
   </svg>
 )
 
 const BellIllustration = () => (
   <svg viewBox="0 0 100 90" className="h-18 w-22" fill="none">
-    <path d="M50 12 C35 12 24 24 24 40 L24 54 L16 62 L84 62 L76 54 L76 40 C76 24 65 12 50 12Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" />
-    <path d="M41 62 C41 67 45 71 50 71 C55 71 59 67 59 62" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" strokeWidth="1.2" />
-    <circle cx="66" cy="58" r="9" fill="rgba(249,115,22,0.25)" stroke="rgba(249,115,22,0.6)" strokeWidth="1.5" />
-    <circle cx="66" cy="58" r="5" fill="#f97316" opacity="0.8" />
+    {/* Bell body */}
+    <path d="M50 12 C35 12 24 24 24 40 L24 54 L16 62 L84 62 L76 54 L76 40 C76 24 65 12 50 12Z" fill="#f59e0b" opacity="0.75" />
+    {/* Bell highlight */}
+    <path d="M50 18 C40 18 32 27 32 40 L32 50 L26 58 L58 58 C54 50 50 42 50 18Z" fill="#fde68a" opacity="0.2" />
+    {/* Clapper */}
+    <path d="M41 62 C41 67 45 71 50 71 C55 71 59 67 59 62" fill="#fbbf24" opacity="0.9" />
+    {/* Notification dot outer */}
+    <circle cx="66" cy="36" r="9" fill="#f59e0b" opacity="0.9" />
+    {/* Notification dot inner */}
+    <circle cx="66" cy="36" r="5" fill="#fef3c7" opacity="0.85" />
   </svg>
 )
 
 const ScratchCardIllustration = () => (
   <svg viewBox="0 0 100 90" className="h-18 w-22" fill="none">
-    <rect x="16" y="14" width="52" height="66" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
-    <circle cx="42" cy="38" rx="9" ry="9" r="9" fill="rgba(249,115,22,0.2)" stroke="rgba(249,115,22,0.5)" strokeWidth="1.5" />
-    <rect x="26" y="55" width="32" height="4" rx="2" fill="rgba(255,255,255,0.1)" />
-    <rect x="26" y="64" width="22" height="4" rx="2" fill="rgba(255,255,255,0.07)" />
-    <path d="M58 50 Q72 42 80 56 Q74 64 66 60Z" fill="#f97316" opacity="0.6" />
+    {/* Card body */}
+    <rect x="16" y="14" width="52" height="66" rx="4" fill="#10b981" opacity="0.7" />
+    {/* Card shine */}
+    <rect x="16" y="14" width="52" height="20" rx="4" fill="#6ee7b7" opacity="0.25" />
+    {/* Coin circle */}
+    <circle cx="42" cy="38" r="11" fill="#34d399" opacity="0.95" />
+    <circle cx="42" cy="38" r="7" fill="#d1fae5" opacity="0.7" />
+    {/* Text lines */}
+    <rect x="26" y="57" width="32" height="4" rx="2" fill="#a7f3d0" opacity="0.6" />
+    <rect x="26" y="66" width="22" height="4" rx="2" fill="#a7f3d0" opacity="0.4" />
+    {/* Scratch peel */}
+    <path d="M58 50 Q72 42 80 56 Q74 64 66 60Z" fill="#059669" opacity="0.85" />
   </svg>
 )
 
 const MailingIllustration = () => (
   <svg viewBox="0 0 100 90" className="h-18 w-22" fill="none">
-    <rect x="10" y="16" width="72" height="50" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
-    <rect x="10" y="16" width="72" height="12" rx="4" fill="rgba(255,255,255,0.08)" />
-    <rect x="10" y="66" width="72" height="6" rx="2" fill="rgba(255,255,255,0.06)" />
-    <rect x="24" y="36" width="44" height="4" rx="2" fill="rgba(255,255,255,0.08)" />
-    <path d="M42 50 L52 57 L62 50" stroke="#f97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    <line x1="52" y1="57" x2="52" y2="44" stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
+    {/* Envelope body */}
+    <rect x="10" y="22" width="72" height="50" rx="4" fill="#0ea5e9" opacity="0.75" />
+    {/* Envelope flap */}
+    <path d="M10 26 L46 50 L82 26" fill="#38bdf8" opacity="0.9" />
+    {/* Envelope fold lines */}
+    <line x1="10" y1="72" x2="38" y2="50" stroke="#bae6fd" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+    <line x1="82" y1="72" x2="54" y2="50" stroke="#bae6fd" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+    {/* Send arrow circle */}
+    <circle cx="72" cy="28" r="12" fill="#0369a1" opacity="0.9" />
+    {/* Arrow */}
+    <path d="M67 28 L77 28 M73 24 L77 28 L73 32" stroke="#e0f2fe" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
@@ -93,8 +116,8 @@ export default function CampaignsPage() {
       <div className="flex flex-col gap-4 px-4 pb-8 sm:gap-5 sm:px-6 md:px-8">
 
         {/* Demo banner */}
-        <div className="flex flex-col gap-2 rounded-xl border border-primary/20 bg-accent px-4 py-3 sm:flex-row sm:items-center sm:gap-3 sm:py-2.5">
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary/20 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-primary">
+        <div className="flex flex-col gap-2 rounded-xl border border-indigo-500/20 bg-indigo-500/5 px-4 py-3 sm:flex-row sm:items-center sm:gap-3 sm:py-2.5">
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-indigo-400">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-3 w-3">
               <rect x="3" y="11" width="18" height="11" rx="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
