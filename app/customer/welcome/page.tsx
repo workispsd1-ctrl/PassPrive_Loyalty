@@ -14,7 +14,7 @@ export default function CustomerWelcomePage() {
     e.preventDefault()
     if (name.trim()) {
       router.push(
-        `/customer/dashboard?phone=${encodeURIComponent(phone)}&name=${encodeURIComponent(name)}`
+        `/customer/home?phone=${encodeURIComponent(phone)}&name=${encodeURIComponent(name)}`
       )
     }
   }
