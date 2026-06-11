@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Check } from 'lucide-react'
 
 // ─── Animation variants ────────────────────────────────────────────────────────
 const stagger = {
@@ -479,7 +480,7 @@ export default function CustomerRewardsPage() {
         </div>
       </motion.div>
 
-      {/* ── Reward Claimed Modal (Premium Bottom Sheet) ───────────────────────── */}
+      {/* ── Reward Claimed Modal ──────────────────────────────────────────────── */}
       <AnimatePresence>
         {activeClaimReward && rewardMsg && (
           <motion.div
@@ -487,7 +488,7 @@ export default function CustomerRewardsPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22 }}
-            className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-end justify-center bg-black/75 backdrop-blur-sm"
             onClick={() => setActiveClaimReward(null)}
           >
             <motion.div
@@ -495,106 +496,111 @@ export default function CustomerRewardsPage() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.85 }}
-              className="relative w-full max-w-md overflow-hidden bg-zinc-950 rounded-t-[2.25rem] border-t border-x border-white/8 shadow-2xl"
+              className="relative w-full max-w-md overflow-hidden bg-zinc-950 rounded-t-[2.5rem] border-t border-x border-white/8 shadow-2xl"
               onClick={e => e.stopPropagation()}
             >
-              {/* ── Confetti: explodes from center, rains upward ── */}
+              {/* Confetti */}
               <div key={confettiKey} className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
                 {confettiDots.map(d => (
                   <ConfettiDot key={d.id} color={d.color} delay={d.delay} tx={d.tx} ty={d.ty} size={d.size} />
                 ))}
               </div>
 
-              {/* Glow blobs */}
-              <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-72 h-44 bg-orange-500/15 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute -top-4 right-0 w-36 h-36 bg-pink-500/10 rounded-full blur-2xl pointer-events-none" />
+              {/* Glow */}
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-40 bg-orange-500/20 rounded-full blur-3xl pointer-events-none" />
 
               {/* Drag handle */}
-              <div className="flex justify-center pt-3.5 pb-1">
-                <div className="w-10 h-1 rounded-full bg-white/12" />
+              <div className="flex justify-center pt-4 pb-2">
+                <div className="w-9 h-[3px] rounded-full bg-white/15" />
               </div>
 
-              {/* Content */}
-              <div className="px-6 pt-3 pb-8 relative z-10">
+              <div className="px-6 pt-2 pb-8 relative z-10">
 
-                {/* Animated emoji + check badge */}
-                <div className="flex flex-col items-center mb-5">
-                  <div className="relative">
-                    {/* Pulsing ring */}
-                    <motion.div
-                      className="absolute inset-0 rounded-full border-2 border-orange-400/35"
-                      initial={{ scale: 1, opacity: 0.6 }}
-                      animate={{ scale: 1.75, opacity: 0 }}
-                      transition={{ duration: 1.4, delay: 0.35, repeat: Infinity, repeatDelay: 1.8 }}
-                    />
-                    {/* Emoji circle */}
-                    <motion.div
-                      className="relative w-24 h-24 rounded-full bg-orange-500/12 border border-orange-500/20 flex items-center justify-center text-5xl"
-                      initial={{ scale: 0.35, rotate: -18 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ type: 'spring', stiffness: 360, damping: 20, delay: 0.06 }}
-                    >
-                      {activeClaimReward.emoji}
-                    </motion.div>
-                    {/* Emerald check badge */}
-                    <motion.div
-                      className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-emerald-500 border-[2.5px] border-zinc-950 flex items-center justify-center shadow-lg shadow-emerald-500/30"
-                      initial={{ scale: 0, rotate: -120 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 22, delay: 0.42 }}
-                    >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </motion.div>
-                  </div>
+                {/* ── Fanned Card Stack ── */}
+                <div className="relative w-full h-52 flex items-center justify-center mb-4 mt-2">
+                  {/* Card 1 (Left tilt - Back) */}
+                  <motion.div 
+                    className="absolute w-26 h-40 rounded-2xl bg-zinc-900/90 border border-white/5 shadow-xl flex flex-col justify-between p-3 select-none"
+                    style={{ x: -50, y: 15, rotate: -15, zIndex: 10 }}
+                    initial={{ opacity: 0, x: 0, rotate: 0 }}
+                    animate={{ opacity: 0.5, x: -50, y: 15, rotate: -15 }}
+                    transition={{ type: 'spring', delay: 0.1, stiffness: 200, damping: 15 }}
+                  >
+                    <div className="text-[7px] font-bold tracking-widest text-white/20">PASSPRIVÉ</div>
+                    <div className="text-xl">🍰</div>
+                    <div className="h-1.5 w-10 bg-white/5 rounded-full" />
+                  </motion.div>
 
+                  {/* Card 2 (Right tilt - Back) */}
+                  <motion.div 
+                    className="absolute w-26 h-40 rounded-2xl bg-zinc-900/90 border border-white/5 shadow-xl flex flex-col justify-between p-3 select-none"
+                    style={{ x: 50, y: 15, rotate: 15, zIndex: 10 }}
+                    initial={{ opacity: 0, x: 0, rotate: 0 }}
+                    animate={{ opacity: 0.5, x: 50, y: 15, rotate: 15 }}
+                    transition={{ type: 'spring', delay: 0.15, stiffness: 200, damping: 15 }}
+                  >
+                    <div className="text-[7px] font-bold tracking-widest text-white/20">PASSPRIVÉ</div>
+                    <div className="text-xl">🍔</div>
+                    <div className="h-1.5 w-10 bg-white/5 rounded-full" />
+                  </motion.div>
+
+                  {/* Card 3 (Center - Front Active) */}
+                  <motion.div 
+                    className="absolute w-32 h-48 rounded-2xl bg-zinc-900/95 border border-orange-500/35 shadow-2xl shadow-orange-500/10 flex flex-col justify-between p-4 z-20 select-none overflow-hidden"
+                    style={{ y: 0, rotate: 0 }}
+                    initial={{ scale: 0.5, y: 25, opacity: 0 }}
+                    animate={{ scale: 1, y: 0, opacity: 1 }}
+                    transition={{ type: 'spring', delay: 0.2, stiffness: 250, damping: 18 }}
+                  >
+                    {/* Glowing card spot */}
+                    <div className="absolute -top-12 -left-12 w-24 h-24 bg-orange-500/10 rounded-full blur-xl pointer-events-none" />
+
+                    <div className="flex justify-between items-start relative z-10">
+                      <span className="text-[8px] font-extrabold uppercase tracking-widest text-orange-400">Claimed Pass</span>
+                      <span className="text-xs text-orange-400">✨</span>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center my-auto relative z-10 w-full">
+                      <div className="h-11 w-11 rounded-xl bg-zinc-800 border border-white/10 flex items-center justify-center text-2xl shadow-inner mb-2">
+                        {activeClaimReward.emoji}
+                      </div>
+                      <p className="text-[10px] font-bold text-white text-center truncate w-full">{activeClaimReward.store}</p>
+                      <p className="text-[8px] text-white/50 text-center truncate w-full mt-0.5">{activeClaimReward.title}</p>
+                    </div>
+
+                    <div className="flex items-center justify-center gap-1.5 py-1 px-2.5 rounded-xl bg-emerald-500/12 border border-emerald-500/25 relative z-10 w-full">
+                      <Check className="h-3 w-3 text-emerald-400" strokeWidth={3} />
+                      <span className="text-[8px] font-black text-emerald-400 uppercase tracking-wider">Claimed</span>
+                    </div>
+                  </motion.div>
+                </div>
+
+                <div className="flex flex-col items-center mb-6">
                   <motion.h3
-                    className="text-[1.6rem] font-black text-white mt-4 tracking-tight text-center leading-tight"
-                    initial={{ opacity: 0, y: 10 }}
+                    className="text-2xl font-black text-white tracking-tight text-center font-display"
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.18, duration: 0.38 }}
+                    transition={{ delay: 0.28, duration: 0.35 }}
                   >
                     {rewardMsg.title}
                   </motion.h3>
                   <motion.p
-                    className="text-[12px] text-white/40 mt-1.5 text-center"
+                    className="text-xs text-white/40 mt-1 text-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.28, duration: 0.38 }}
+                    transition={{ delay: 0.34, duration: 0.35 }}
                   >
                     {rewardMsg.subtitle}
                   </motion.p>
                 </div>
 
-                {/* Reward detail row */}
+                {/* How to Redeem section follows directly */}
+                {/* ── How to redeem ── */}
                 <motion.div
-                  className="flex items-center gap-3 bg-white/4 border border-white/7 rounded-2xl px-4 py-3.5 mb-3"
-                  initial={{ opacity: 0, y: 10 }}
+                  className="rounded-2xl bg-white/3 border border-white/6 p-4 mb-5"
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.26, duration: 0.38 }}
-                >
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-800/80 border border-white/5 text-xl">
-                    {activeClaimReward.emoji}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-white truncate">{activeClaimReward.store}</p>
-                    <p className="text-[11px] text-white/40 mt-0.5">{activeClaimReward.title}</p>
-                  </div>
-                  <div className="flex items-center gap-1 shrink-0 px-2.5 py-1.5 rounded-xl bg-emerald-500/12 border border-emerald-500/20">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-3 w-3 text-emerald-400">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    <span className="text-[11px] font-bold text-emerald-400">Claimed</span>
-                  </div>
-                </motion.div>
-
-                {/* How to redeem steps */}
-                <motion.div
-                  className="rounded-2xl bg-white/3 border border-white/6 p-4 mb-3"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35, duration: 0.38 }}
+                  transition={{ delay: 0.32, duration: 0.35 }}
                 >
                   <p className="text-[10px] font-bold uppercase tracking-widest text-white/25 mb-3">How to Redeem</p>
                   <div className="flex flex-col gap-2.5">
@@ -602,49 +608,30 @@ export default function CustomerRewardsPage() {
                       <motion.div
                         key={i}
                         className="flex items-center gap-3"
-                        initial={{ opacity: 0, x: -8 }}
+                        initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4 + i * 0.09, duration: 0.32 }}
+                        transition={{ delay: 0.38 + i * 0.08, duration: 0.28 }}
                       >
                         <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500/15 border border-orange-500/25 text-[10px] font-black text-orange-400">
                           {i + 1}
                         </div>
-                        <span className="text-[12px] text-white/55 font-medium">{step}</span>
+                        <span className="text-xs text-white/55 font-medium">{step}</span>
                       </motion.div>
                     ))}
                   </div>
                 </motion.div>
 
-                {/* Quote */}
-                <motion.p
-                  className="text-[11px] italic text-zinc-600 text-center leading-relaxed px-2 mb-5"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.65, duration: 0.45 }}
-                >
-                  {rewardMsg.quote}
-                </motion.p>
-
-                {/* CTA buttons */}
-                <motion.div
-                  className="flex gap-3"
-                  initial={{ opacity: 0, y: 8 }}
+                {/* ── Done button ── */}
+                <motion.button
+                  onClick={() => setActiveClaimReward(null)}
+                  className="w-full py-3.5 rounded-2xl text-sm font-bold text-white bg-orange-500 hover:bg-orange-400 transition-colors cursor-pointer shadow-lg shadow-orange-500/25"
+                  initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5, duration: 0.38 }}
+                  transition={{ delay: 0.45, duration: 0.32 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <button
-                    onClick={() => setActiveClaimReward(null)}
-                    className="flex-1 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider bg-white/7 hover:bg-white/10 text-white/60 transition-colors cursor-pointer border border-white/8"
-                  >
-                    Done
-                  </button>
-                  <button
-                    onClick={() => { setActiveClaimReward(null); router.push('/customer/home') }}
-                    className="flex-1 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider bg-orange-500 hover:bg-orange-400 text-white transition-colors cursor-pointer shadow-lg shadow-orange-500/25"
-                  >
-                    Go Home ✦
-                  </button>
-                </motion.div>
+                  Done
+                </motion.button>
               </div>
             </motion.div>
           </motion.div>
