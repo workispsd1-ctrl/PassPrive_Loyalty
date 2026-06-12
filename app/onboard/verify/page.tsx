@@ -77,10 +77,10 @@ export default function VerifyPage() {
       await new Promise((r) => setTimeout(r, 600))
       router.push(`/dashboard?phone=${encodeURIComponent(phone)}`)
     } else if (otpCode === '2222') {
-      // Already registered as CUSTOMER → skip onboarding, go to customer dashboard
+      // Already registered as CUSTOMER → skip onboarding, go to customer home
       setStatusMsg('Welcome back! Taking you to your rewards…')
       await new Promise((r) => setTimeout(r, 600))
-      router.push(`/customer/dashboard?phone=${encodeURIComponent(phone)}&name=User`)
+      router.push(`/customer/home?phone=${encodeURIComponent(phone)}`)
     } else {
       // NEW USER → continue with onboarding flow
       setStatusMsg('New account! Let\'s get you set up…')

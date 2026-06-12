@@ -93,7 +93,7 @@ export default function SuccessPage() {
 
           {/* Footer */}
           <p className="mt-10 text-xs text-muted-foreground">
-            Powered by Druto Rewards
+            Powered by PassPrivé
           </p>
         </div>
       </div>
