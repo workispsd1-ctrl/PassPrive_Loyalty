@@ -173,8 +173,7 @@ export default function BusinessPage() {
               {/* Floating solid dropdown panel */}
               {showDropdown && (
                 <div
-                  className="absolute left-0 right-0 mt-2 z-50 rounded-2xl border border-border shadow-2xl overflow-hidden"
-                  style={{ background: 'hsl(var(--card))', backdropFilter: 'none' }}
+                  className="absolute left-0 right-0 mt-2 z-50 rounded-2xl border border-border shadow-2xl overflow-hidden bg-[#121214]"
                 >
                   <div className="max-h-64 overflow-y-auto divide-y divide-border">
                     {CATEGORIES.map((cat) => (
@@ -190,7 +189,6 @@ export default function BusinessPage() {
                             ? 'bg-primary text-primary-foreground'
                             : 'text-foreground hover:bg-muted'
                         }`}
-                        style={category !== cat.value ? { background: 'hsl(var(--card))' } : undefined}
                       >
                         <span className="text-xl shrink-0">{cat.icon}</span>
                         <span className="font-medium text-sm">{cat.label}</span>
