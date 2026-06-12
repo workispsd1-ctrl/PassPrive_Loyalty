@@ -82,7 +82,7 @@ export default function BusinessPage() {
   const selectedCategory = CATEGORIES.find((cat) => cat.value === category)
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-6 py-12 bg-gradient-to-br from-background via-background to-primary/5">
+    <main className="min-h-screen flex items-center justify-center px-6 py-12 bg-transparent">
       {/* Glow background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -98,14 +98,22 @@ export default function BusinessPage() {
       <div className="w-full max-w-2xl">
         <div className="rounded-3xl border border-border bg-card backdrop-blur-xl p-8 sm:p-12">
           {/* Header */}
-          <div className="text-center mb-12">
-            <div className="inline-block mb-4">
-              <span className="text-4xl">🚀</span>
+          <div className="text-center mb-10">
+            <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-3xl bg-primary/10 border border-primary/20 rotate-6 scale-95" />
+              <div className="absolute inset-0 rounded-3xl bg-primary/5 border border-primary/10 -rotate-6 scale-95" />
+              <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-orange-500 flex items-center justify-center shadow-lg shadow-primary/20">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-white">
+                  <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
+                  <path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2" />
+                  <path d="M12 13v4M9 15h6" />
+                </svg>
+              </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-gradient-to-r from-foreground via-foreground to-primary/80 bg-clip-text">
               About your business
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-3 text-base sm:text-lg text-muted-foreground">
               Tell us a bit more to set up your profile.
             </p>
           </div>
@@ -173,7 +181,7 @@ export default function BusinessPage() {
               {/* Floating solid dropdown panel */}
               {showDropdown && (
                 <div
-                  className="absolute left-0 right-0 mt-2 z-50 rounded-2xl border border-border shadow-2xl overflow-hidden bg-[#121214]"
+                  className="absolute left-0 right-0 mt-2 z-50 rounded-2xl border border-border shadow-2xl overflow-hidden bg-[#1e1e22]"
                 >
                   <div className="max-h-64 overflow-y-auto divide-y divide-border">
                     {CATEGORIES.map((cat) => (

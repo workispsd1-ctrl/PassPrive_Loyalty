@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function SuccessPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center px-6 py-12 bg-gradient-to-br from-background via-background to-primary/5">
+    <main className="min-h-screen flex items-center justify-center px-6 py-12 bg-transparent">
       {/* Glow background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -21,25 +21,26 @@ export default function SuccessPage() {
       <div className="w-full max-w-2xl">
         <div className="rounded-3xl border border-border bg-card backdrop-blur-xl p-8 sm:p-12 text-center">
           {/* Success Icon */}
-          <div className="inline-block mb-8">
-            <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-3xl bg-primary/10 border border-primary/20 rotate-6 scale-95" />
+            <div className="absolute inset-0 rounded-3xl bg-primary/5 border border-primary/10 -rotate-6 scale-95" />
+            <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-orange-500 flex items-center justify-center shadow-lg shadow-primary/20">
               <svg
-                className="h-10 w-10 text-primary animate-pulse-glow"
+                className="h-8 w-8 text-white"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                <path d="M22 4L12 14.01l-3-3" />
+                <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
           </div>
 
           {/* Header */}
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground mb-4">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-gradient-to-r from-foreground via-foreground to-primary/80 bg-clip-text mb-4">
             All set! 🎉
           </h1>
           <p className="text-lg text-muted-foreground mb-8">

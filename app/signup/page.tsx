@@ -28,7 +28,7 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-6 py-12 bg-gradient-to-br from-background via-background to-primary/5">
+    <main className="min-h-screen flex items-center justify-center px-6 py-12 bg-transparent">
       {/* Glow background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -45,15 +45,34 @@ export default function SignupPage() {
         <div className="rounded-3xl border border-border bg-card backdrop-blur-xl p-8 sm:p-12">
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="text-4xl mb-2">{userType === 'customer' ? '✨' : '🚀'}</div>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+            <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-3xl bg-primary/10 border border-primary/20 rotate-6 scale-95" />
+              <div className="absolute inset-0 rounded-3xl bg-primary/5 border border-primary/10 -rotate-6 scale-95" />
+              <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-orange-500 flex items-center justify-center shadow-lg shadow-primary/20">
+                {userType === 'customer' ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-white">
+                    <rect x="3" y="4" width="18" height="16" rx="2" />
+                    <path d="M3 10h18" />
+                    <path d="M8 14h.01M12 14h.01M16 14h.01" />
+                    <path d="M8 17h.01M12 17h.01M16 17h.01" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-white">
+                    <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
+                    <path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2" />
+                    <path d="M12 13v4M9 15h6" />
+                  </svg>
+                )}
+              </div>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-gradient-to-r from-foreground via-foreground to-primary/80 bg-clip-text">
               {userType === 'customer' ? (
-                <>Start earning <span className="text-primary">free rewards!</span></>
+                <>Start earning free rewards!</>
               ) : (
-                <>Grow your business with <span className="text-primary">loyalty!</span></>
+                <>Grow your business with loyalty!</>
               )}
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-3 text-base sm:text-lg text-muted-foreground">
               {userType === 'customer'
                 ? 'Enter your number — sign in or join for free!'
                 : "Enter your number — sign in or set up your loyalty program"}
@@ -76,7 +95,7 @@ export default function SignupPage() {
               <button
                 onClick={() => setUserType('business')}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${userType === 'business'
-                    ? 'bg-card text-foreground border border-border shadow-lg'
+                    ? 'bg-primary text-primary-foreground border border-primary shadow-lg shadow-primary/20'
                     : 'text-muted-foreground hover:text-foreground'
                   }`}
               >

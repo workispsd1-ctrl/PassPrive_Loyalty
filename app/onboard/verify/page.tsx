@@ -113,7 +113,7 @@ export default function VerifyPage() {
   const isChecking = checkState === 'checking'
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-6 py-12 bg-gradient-to-br from-background via-background to-primary/5">
+    <main className="min-h-screen flex items-center justify-center px-6 py-12 bg-transparent">
       {/* Glow background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -125,45 +125,68 @@ export default function VerifyPage() {
         <div className="rounded-3xl border border-border bg-card backdrop-blur-xl p-8 sm:p-12">
 
           {/* Header */}
-          <div className="text-center mb-12">
-            <div className="text-5xl mb-4">
+          <div className="text-center mb-10">
+            <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
               {isChecking ? (
-                <span className="inline-block animate-spin">⏳</span>
+                <>
+                  <div className="absolute inset-0 rounded-3xl border border-primary/20 animate-pulse" />
+                  <div className="absolute inset-0 rounded-3xl border-2 border-t-primary border-r-transparent border-b-transparent border-l-transparent animate-spin" />
+                  <div className="relative w-16 h-16 rounded-2xl bg-muted/55 flex items-center justify-center">
+                    <span className="text-2xl animate-bounce">⏳</span>
+                  </div>
+                </>
               ) : (
-                '📲'
+                <>
+                  <div className="absolute inset-0 rounded-3xl bg-primary/10 border border-primary/20 rotate-6 scale-95" />
+                  <div className="absolute inset-0 rounded-3xl bg-primary/5 border border-primary/10 -rotate-6 scale-95" />
+                  <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-orange-500 flex items-center justify-center shadow-lg shadow-primary/20">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-white">
+                      <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                      <line x1="12" y1="18" x2="12.01" y2="18" />
+                    </svg>
+                  </div>
+                </>
               )}
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-gradient-to-r from-foreground via-foreground to-primary/80 bg-clip-text">
               {isChecking ? 'Checking…' : 'Verify your number'}
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-3 text-base sm:text-lg text-muted-foreground">
               We&apos;ve sent a 4-digit code to{' '}
-              <span className="text-primary font-semibold">{phone}</span>
+              <span className="text-primary font-semibold tracking-wide">{phone}</span>
             </p>
 
             {/* Status message */}
             {statusMsg && (
-              <div className="mt-4 rounded-xl bg-primary/10 border border-primary/20 px-4 py-3 text-sm font-medium text-primary">
+              <div className="mt-6 rounded-2xl bg-primary/10 border border-primary/30 px-5 py-4 text-sm font-semibold text-primary animate-fade-up shadow-lg shadow-primary/5 flex items-center justify-center gap-3">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
                 {statusMsg}
               </div>
             )}
 
             {/* Demo hint */}
             {!isChecking && !statusMsg && (
-              <div className="mt-5 rounded-xl border border-border bg-muted/40 px-4 py-3 text-xs text-muted-foreground text-left space-y-1">
-                <p className="font-semibold text-foreground mb-1">Demo — try these codes:</p>
-                <p>
-                  <span className="font-mono font-bold text-primary">1111</span>
-                  {' '}→ Already a Business → goes to Business Dashboard
+              <div className="mt-6 rounded-2xl border border-border/80 bg-muted/20 backdrop-blur-md p-4 text-xs text-muted-foreground text-left space-y-2 max-w-md mx-auto">
+                <p className="font-semibold text-foreground flex items-center gap-1.5">
+                  <span className="text-primary">💡</span> Demo Codes:
                 </p>
-                <p>
-                  <span className="font-mono font-bold text-primary">2222</span>
-                  {' '}→ Already a Customer → goes to Customer Dashboard
-                </p>
-                <p>
-                  <span className="font-mono font-bold text-foreground">Any other</span>
-                  {' '}→ New user → starts {userType} onboarding
-                </p>
+                <div className="grid grid-cols-1 gap-1.5 pl-5">
+                  <div>
+                    <span className="font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">1111</span>
+                    <span className="ml-2 text-muted-foreground">Registered Business user</span>
+                  </div>
+                  <div>
+                    <span className="font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">2222</span>
+                    <span className="ml-2 text-muted-foreground">Registered Customer user</span>
+                  </div>
+                  <div>
+                    <span className="font-mono font-bold text-foreground bg-muted border border-border px-1.5 py-0.5 rounded">Other</span>
+                    <span className="ml-2 text-muted-foreground">New user onboarding flow</span>
+                  </div>
+                </div>
               </div>
             )}
           </div>
