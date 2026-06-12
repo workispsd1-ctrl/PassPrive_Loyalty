@@ -111,7 +111,7 @@ export default function Sidebar() {
   }, [])
 
   return (
-    <aside className='relative flex shrink-0 flex-col bg-neutral-900 rounded-r-4xl'>
+    <aside className='relative flex shrink-0 flex-col bg-background border-r border-border'>
       <button
         type='button'
         onClick={() => setCollapsed((c) => !c)}
@@ -136,11 +136,11 @@ export default function Sidebar() {
       >
         {/* Logo */}
         <div
-          className={`flex flex-col gap-3 py-7 justify-center items-center text-center border-b border-neutral-800 ${
+          className={`flex flex-col gap-3 py-7 justify-center items-center text-center border-b border-border ${
             collapsed ? 'px-3' : 'px-5'
           }`}
         >
-          <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-neutral-800 ring-1 ring-neutral-700'>
+          <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20'>
             <svg viewBox='0 0 40 40' className='h-8 w-8'>
               <circle cx='20' cy='20' r='18' fill='white' fillOpacity='0.9' />
               <circle cx='20' cy='14' r='5' fill='#ea580c' />
@@ -151,13 +151,11 @@ export default function Sidebar() {
 
           {!collapsed && (
             <div className='text-center'>
-              <p className='text-[20px] font-bold leading-none tracking-tight text-white'>
-                PassPrive
-                <sup className='ml-0.5 text-[10px] font-extrabold uppercase tracking-widest text-orange-400'>
-                  Loyalty
-                </sup>
+              <p className='text-[20px] font-bold leading-none tracking-tight text-foreground'>
+                SERVICE STAMPPY
+
               </p>
-              <p className='mt-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-500'>
+              <p className='mt-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground'>
                 TEST CAFE
               </p>
             </div>
@@ -179,8 +177,8 @@ export default function Sidebar() {
                   'flex items-center gap-3 rounded-lg py-2.5 text-sm no-underline transition-all duration-150',
                   collapsed ? 'justify-center px-2' : 'px-3',
                   active
-                    ? 'bg-neutral-800 text-orange-400 font-semibold border-l-2 border-l-orange-400'
-                    : 'text-neutral-400 font-normal border-l-2 border-l-transparent hover:bg-neutral-800 hover:text-neutral-200',
+                    ? 'bg-primary/10 text-primary font-semibold border-l-2 border-l-primary'
+                    : 'text-muted-foreground font-normal border-l-2 border-l-transparent hover:bg-white/5 hover:text-foreground',
                 ].join(' ')}
               >
                 {item.icon}
