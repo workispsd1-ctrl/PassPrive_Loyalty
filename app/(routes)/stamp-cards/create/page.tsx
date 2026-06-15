@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import QRCode from 'qrcode'
+import { useUnlock } from '../../_components/UnlockProvider'
+import { getSavedLocations, publishStampCard, type SavedLocation } from '../actions'
 
 /* ------------------------------------------------------------------ */
 /*  Stamp icon options                                                 */
@@ -515,10 +517,12 @@ type StoreLocation = {
 
 function LocationModal({
   defaultBusinessName,
+  savedLocations,
   onClose,
   onSave,
 }: {
   defaultBusinessName: string
+  savedLocations: SavedLocation[]
   onClose: () => void
   onSave: (location: StoreLocation) => void
 }) {
@@ -549,10 +553,11 @@ function LocationModal({
     setErrors(next)
     if (Object.keys(next).length > 0) return
 
+    const picked = savedLocations.find((l) => l.id === selectedLocation)
     onSave({
       id: crypto.randomUUID(),
       businessName: businessName.trim(),
-      address: address.trim() || selectedLocation,
+      address: address.trim() || picked?.address || '',
       logoImage,
       logoPreset,
     })
@@ -626,17 +631,32 @@ function LocationModal({
             </div>
           )}
 
-          <Field label="Or choose from locations list">
-            <select
-              className={inputClass}
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-            >
-              <option value="">Select location</option>
-              <option value="Test Cafe — Main Street">Test Cafe — Main Street</option>
-              <option value="Test Cafe — High Street">Test Cafe — High Street</option>
-            </select>
-          </Field>
+          {savedLocations.length > 0 && (
+            <Field label="Or choose from your locations">
+              <select
+                className={inputClass}
+                value={selectedLocation}
+                onChange={(e) => {
+                  const id = e.target.value
+                  setSelectedLocation(id)
+                  const picked = savedLocations.find((l) => l.id === id)
+                  if (picked) {
+                    setBusinessName(picked.businessName)
+                    setAddress(picked.address)
+                    setErrors({})
+                  }
+                }}
+              >
+                <option value="">Select a saved location</option>
+                {savedLocations.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.businessName}
+                    {l.address ? ` — ${l.address}` : ''}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
 
           <Field label="Logo" hint="128×128px (square) — JPG / PNG / GIF only">
             <div className="flex items-center gap-4">
@@ -721,6 +741,9 @@ function LocationModal({
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 export default function CreateStampCardPage() {
+  // Plan + the logged-in business's account name (from Supabase, via the layout).
+  const { locationLimit, planName, openPlans, businessName: accountBusinessName } = useUnlock()
+
   const [cardName, setCardName] = useState('')
   const [stamps, setStamps] = useState(10)
   const [description, setDescription] = useState('')
@@ -728,7 +751,7 @@ export default function CreateStampCardPage() {
   const [iconImage, setIconImage] = useState<string | null>(null)
 
   const [websiteUrl, setWebsiteUrl] = useState('')
-  const [businessName, setBusinessName] = useState('')
+  const [businessName, setBusinessName] = useState(accountBusinessName)
   const [terms, setTerms] = useState('')
 
   const [stampingDelay, setStampingDelay] = useState(false)
@@ -745,14 +768,24 @@ export default function CreateStampCardPage() {
   const [rewards, setRewards] = useState<Reward[]>([])
   const [rewardModalOpen, setRewardModalOpen] = useState(false)
 
-  // Location step
+  // Location step — capped by the business's plan (location_limit from Supabase)
   const [locations, setLocations] = useState<StoreLocation[]>([])
   const [locationModalOpen, setLocationModalOpen] = useState(false)
+  const [savedLocations, setSavedLocations] = useState<SavedLocation[]>([])
+  const limitReached = locations.length >= locationLimit
+
+  useEffect(() => {
+    getSavedLocations()
+      .then(setSavedLocations)
+      .catch(() => setSavedLocations([]))
+  }, [])
 
   // Style step — a unique QR is generated per card (client-side, so it can be
   // downloaded and saved to Supabase later without depending on any third party)
   const [styleTemplate, setStyleTemplate] = useState<StyleTemplate>('plain')
   const [published, setPublished] = useState(false)
+  const [publishing, setPublishing] = useState(false)
+  const [publishError, setPublishError] = useState('')
   const [cardId] = useState(() => crypto.randomUUID())
   const qrUrl = `https://app.passprive.com/c/${cardId}`
   const [qrSrc, setQrSrc] = useState('')
@@ -798,6 +831,7 @@ export default function CreateStampCardPage() {
   const validateStep1 = () => {
     const next: Record<string, string> = {}
     if (!cardName.trim()) next.cardName = 'Card name is required.'
+    if (!businessName.trim()) next.businessName = 'Business name is required.'
     if (!stamps || stamps < 1) next.stamps = 'Enter the number of stamps to earn a reward.'
     if (!terms.trim()) {
       next.terms = 'Terms and conditions are required.'
@@ -812,16 +846,61 @@ export default function CreateStampCardPage() {
     return Object.keys(next).length === 0
   }
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (step === 0 && !validateStep1()) {
       // bring the first error into view
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
-    // Final step — publish (UI only for now).
+    // Final step — publish to Supabase.
     if (step === STEPS.length - 1) {
-      setPublished(true)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      if (publishing) return
+      setPublishing(true)
+      setPublishError('')
+      try {
+        await publishStampCard({
+          name: cardName.trim(),
+          stampsRequired: stamps,
+          description,
+          stampIcon: iconImage ? '' : icon,
+          stampIconUrl: iconImage,
+          websiteUrl,
+          businessName: businessName.trim(),
+          terms,
+          stampingDelay,
+          stampingDelayValue,
+          stampingDelayUnit,
+          reviewLink,
+          reviewUrl,
+          multiStamping,
+          maxStampsPerVisit,
+          styleTemplate,
+          qrColor: dark,
+          bgColor: light,
+          qrToken: cardId,
+          qrUrl,
+          qrImageUrl: qrSrc || null,
+          rewards: rewards.map((r) => ({
+            type: r.type,
+            name: r.name,
+            stamps: r.stamps,
+            expiry: r.expiry,
+            expiryDays: r.expiryDays,
+          })),
+          locations: locations.map((l) => ({
+            businessName: l.businessName,
+            address: l.address,
+            logoUrl: l.logoImage,
+            logoEmoji: l.logoPreset,
+          })),
+        })
+        setPublished(true)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } catch {
+        setPublishError('Could not publish your card. Please try again.')
+      } finally {
+        setPublishing(false)
+      }
       return
     }
     // Entering the Rewards step for the first time — prompt to add a reward.
@@ -1019,9 +1098,9 @@ export default function CreateStampCardPage() {
                 onChange={(e) => setWebsiteUrl(e.target.value)}
               />
             </Field>
-            <Field label="Business name">
+            <Field label="Business name" required error={errors.businessName} hint="Pulled from your account — edit if your card should show a different name.">
               <input
-                className={inputClass}
+                className={`${inputClass} ${errors.businessName ? 'border-destructive' : ''}`}
                 placeholder="Your Business Ltd."
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
@@ -1254,18 +1333,45 @@ export default function CreateStampCardPage() {
                 </div>
               )}
 
-              {/* Add location */}
-              <button
-                type="button"
-                onClick={() => setLocationModalOpen(true)}
-                className="inline-flex w-fit items-center gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 px-4 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-                Add location
-              </button>
+              {/* Add location — or upgrade prompt when the plan limit is reached */}
+              {limitReached ? (
+                <div className="flex flex-col gap-3 rounded-xl border border-primary/30 bg-primary/5 p-4">
+                  <div className="flex items-start gap-2.5">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 h-4 w-4 shrink-0 text-primary">
+                      <rect x="3" y="11" width="18" height="11" rx="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    <p className="text-sm text-foreground">
+                      Your <span className="font-semibold">{planName}</span> plan only supports {locationLimit}{' '}
+                      {locationLimit === 1 ? 'main location' : 'locations'}.{' '}
+                      {planName === 'Pro'
+                        ? 'Contact us to add more branches.'
+                        : 'Upgrade to Growth or Pro plan to add branches.'}
+                    </p>
+                  </div>
+                  {planName !== 'Pro' && (
+                    <button
+                      type="button"
+                      onClick={openPlans}
+                      className="inline-flex w-fit items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-600"
+                    >
+                      Upgrade plan
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setLocationModalOpen(true)}
+                  className="inline-flex w-fit items-center gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 px-4 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Add location
+                </button>
+              )}
             </SectionCard>
           )}
 
@@ -1557,25 +1663,35 @@ export default function CreateStampCardPage() {
                 Back
               </button>
             )}
-            <div className="flex items-center gap-3">
-              {step > 0 && (
-                <Link
-                  href="/stamp-cards"
-                  className="inline-flex items-center rounded-lg border border-border bg-muted px-4 py-2.5 text-sm font-semibold text-foreground no-underline transition-colors hover:bg-white/10"
+            <div className="flex flex-col items-end gap-2">
+              <div className="flex items-center gap-3">
+                {step > 0 && (
+                  <Link
+                    href="/stamp-cards"
+                    className="inline-flex items-center rounded-lg border border-border bg-muted px-4 py-2.5 text-sm font-semibold text-foreground no-underline transition-colors hover:bg-white/10"
+                  >
+                    Save &amp; Exit
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={handleContinue}
+                  disabled={publishing}
+                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60"
                 >
-                  Save &amp; Exit
-                </Link>
-              )}
-              <button
-                type="button"
-                onClick={handleContinue}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                {step === STEPS.length - 1 ? 'Publish' : step === 0 ? 'Continue' : 'Next'}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </button>
+                  {step === STEPS.length - 1
+                    ? publishing
+                      ? 'Publishing…'
+                      : 'Publish'
+                    : step === 0
+                      ? 'Continue'
+                      : 'Next'}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </button>
+              </div>
+              {publishError && <p className="text-sm font-medium text-destructive">{publishError}</p>}
             </div>
           </div>
         </div>
@@ -1610,6 +1726,7 @@ export default function CreateStampCardPage() {
       {locationModalOpen && (
         <LocationModal
           defaultBusinessName={businessName}
+          savedLocations={savedLocations}
           onClose={() => setLocationModalOpen(false)}
           onSave={(location) => {
             setLocations((list) => [...list, location])

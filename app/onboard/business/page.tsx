@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { registerBusiness } from '@/app/onboard/actions'
 
 const CATEGORIES = [
   { icon: '☕', label: 'Café', value: 'cafe' },
@@ -33,6 +34,8 @@ export default function BusinessPage() {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [businessPhone, setBusinessPhone] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -61,21 +64,24 @@ export default function BusinessPage() {
     }
   }
 
-  const handleCreateBusiness = (e: React.FormEvent) => {
+  const handleCreateBusiness = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (businessName.trim() && category) {
-      // TODO: Create business with backend
-      console.log({
-        name,
-        businessName,
+    if (!businessName.trim() || !category || submitting) return
+
+    setSubmitting(true)
+    setError('')
+    try {
+      await registerBusiness({
+        businessName: businessName.trim(),
+        ownerName: name,
         category,
-        location,
-        businessPhone,
-        phone,
-        userType,
+        phone: businessPhone || phone,
+        location: location ? `${location.lat},${location.lng}` : '',
       })
-      // For now, redirect to success or dashboard
       router.push('/onboard/success')
+    } catch {
+      setError('Could not create your business. Please try again.')
+      setSubmitting(false)
     }
   }
 
@@ -273,13 +279,18 @@ export default function BusinessPage() {
               </div>
             </div>
 
+            {/* Error */}
+            {error && (
+              <p className="text-center text-sm font-medium text-destructive">{error}</p>
+            )}
+
             {/* CTA Button */}
             <button
               type="submit"
-              disabled={!businessName.trim() || !category}
+              disabled={!businessName.trim() || !category || submitting}
               className="w-full py-4 px-6 bg-primary hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground font-semibold rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
             >
-              Create My Business
+              {submitting ? 'Creating…' : 'Create My Business'}
               <svg
                 className="h-5 w-5"
                 viewBox="0 0 24 24"

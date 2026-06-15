@@ -2,6 +2,9 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { signInBusiness } from '@/app/onboard/actions'
+
+const TEST_OTP = '1234'
 
 /**
  * UNIFIED OTP VERIFICATION — handles both Sign-In and Sign-Up
@@ -64,32 +67,41 @@ export default function VerifyPage() {
     const otpCode = otp.join('')
     if (otpCode.length !== 4) return
 
+    // Test phase: a single standard OTP until the SMS provider (MSG91) is live.
+    if (otpCode !== TEST_OTP) {
+      setStatusMsg(`Invalid code. Use ${TEST_OTP} for now.`)
+      setOtp(['', '', '', ''])
+      inputRefs.current[0]?.focus()
+      return
+    }
+
     setCheckState('checking')
     setStatusMsg('')
+    await new Promise((r) => setTimeout(r, 600))
 
-    // Simulate backend API call
-    await new Promise((r) => setTimeout(r, 900))
-
-    // --- Simulated registration check ---
-    if (otpCode === '1111') {
-      // Already registered as BUSINESS → skip onboarding, go to dashboard
-      setStatusMsg('Welcome back! Taking you to your dashboard…')
-      await new Promise((r) => setTimeout(r, 600))
-      router.push(`/dashboard?phone=${encodeURIComponent(phone)}`)
-    } else if (otpCode === '2222') {
-      // Already registered as CUSTOMER → skip onboarding, go to customer home
-      setStatusMsg('Welcome back! Taking you to your rewards…')
-      await new Promise((r) => setTimeout(r, 600))
+    if (userType === 'customer') {
+      setStatusMsg('Welcome! Taking you to your rewards…')
       router.push(`/customer/home?phone=${encodeURIComponent(phone)}`)
-    } else {
-      // NEW USER → continue with onboarding flow
-      setStatusMsg('New account! Let\'s get you set up…')
-      await new Promise((r) => setTimeout(r, 600))
-      if (userType === 'customer') {
-        router.push(`/customer/welcome?phone=${encodeURIComponent(phone)}`)
+      setCheckState('done')
+      return
+    }
+
+    // Business: is this phone already registered in Supabase?
+    try {
+      const { exists } = await signInBusiness(phone)
+      if (exists) {
+        setStatusMsg('Welcome back! Taking you to your dashboard…')
+        await new Promise((r) => setTimeout(r, 400))
+        router.push('/dashboard')
       } else {
+        setStatusMsg("New account! Let's get you set up…")
+        await new Promise((r) => setTimeout(r, 400))
         router.push(`/onboard/welcome?phone=${encodeURIComponent(phone)}&type=${userType}`)
       }
+    } catch {
+      setStatusMsg('Something went wrong. Please try again.')
+      setCheckState('idle')
+      return
     }
 
     setCheckState('done')
@@ -171,20 +183,15 @@ export default function VerifyPage() {
             {!isChecking && !statusMsg && (
               <div className="mt-6 rounded-2xl border border-border/80 bg-muted/20 backdrop-blur-md p-4 text-xs text-muted-foreground text-left space-y-2 max-w-md mx-auto">
                 <p className="font-semibold text-foreground flex items-center gap-1.5">
-                  <span className="text-primary">💡</span> Demo Codes:
+                  <span className="text-primary">💡</span> Test code (until SMS OTP is live):
                 </p>
                 <div className="grid grid-cols-1 gap-1.5 pl-5">
                   <div>
-                    <span className="font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">1111</span>
-                    <span className="ml-2 text-muted-foreground">Registered Business user</span>
+                    <span className="font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">1234</span>
+                    <span className="ml-2 text-muted-foreground">Standard verification code</span>
                   </div>
-                  <div>
-                    <span className="font-mono font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">2222</span>
-                    <span className="ml-2 text-muted-foreground">Registered Customer user</span>
-                  </div>
-                  <div>
-                    <span className="font-mono font-bold text-foreground bg-muted border border-border px-1.5 py-0.5 rounded">Other</span>
-                    <span className="ml-2 text-muted-foreground">New user onboarding flow</span>
+                  <div className="text-muted-foreground">
+                    New number → set up your business · Existing → straight to your dashboard
                   </div>
                 </div>
               </div>

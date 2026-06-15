@@ -1,4 +1,6 @@
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
+import { BUSINESS_COOKIE } from '@/app/onboard/session'
 
 export type DashboardStats = {
   stampsThisYear: number
@@ -66,11 +68,24 @@ export async function getDashboardData(): Promise<DashboardData> {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Resolve which business to show.
-  const businessQuery = supabase.from('businesses').select('id, name, is_demo').limit(1)
-  const { data: business } = user
-    ? await businessQuery.eq('owner_id', user.id).maybeSingle()
-    : await businessQuery.eq('is_demo', true).maybeSingle()
+  // Resolve which business to show:
+  //   1. authenticated owner  → their business (real auth, once MSG91 is live)
+  //   2. test-session cookie  → the business they signed in / registered with
+  //   3. fallback             → the seeded demo business
+  const cookieStore = await cookies()
+  const cookieBusinessId = cookieStore.get(BUSINESS_COOKIE)?.value
+
+  const baseQuery = supabase.from('businesses').select('id, name, is_demo').limit(1)
+  let business: { id: string; name: string; is_demo: boolean } | null = null
+
+  if (user) {
+    business = (await baseQuery.eq('owner_id', user.id).maybeSingle()).data
+  } else if (cookieBusinessId) {
+    business = (await baseQuery.eq('id', cookieBusinessId).maybeSingle()).data
+  }
+  if (!business) {
+    business = (await baseQuery.eq('is_demo', true).maybeSingle()).data
+  }
 
   if (!business) {
     // Authenticated owner who hasn't created a business yet.

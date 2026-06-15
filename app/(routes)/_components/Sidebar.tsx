@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useUnlock } from './UnlockProvider'
 
 const LockIcon = () => (
   <svg
@@ -105,6 +106,7 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
+  const { unlocked } = useUnlock()
 
   useEffect(() => {
     setCollapsed(window.innerWidth < 768)
@@ -185,7 +187,7 @@ export default function Sidebar() {
                 {!collapsed && (
                   <>
                     <span className='flex-1'>{item.label}</span>
-                    {item.locked && <LockIcon />}
+                    {item.locked && !unlocked && <LockIcon />}
                   </>
                 )}
               </Link>

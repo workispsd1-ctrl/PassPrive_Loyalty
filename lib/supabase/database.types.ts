@@ -21,11 +21,14 @@ export type Database = {
           id: string
           is_demo: boolean
           location: string | null
+          location_limit: number | null
           logo_url: string | null
           name: string
           owner_id: string | null
           owner_name: string | null
           phone: string | null
+          plan_id: string | null
+          subscribed_at: string | null
           updated_at: string
         }
         Insert: {
@@ -34,11 +37,14 @@ export type Database = {
           id?: string
           is_demo?: boolean
           location?: string | null
+          location_limit?: number | null
           logo_url?: string | null
           name: string
           owner_id?: string | null
           owner_name?: string | null
           phone?: string | null
+          plan_id?: string | null
+          subscribed_at?: string | null
           updated_at?: string
         }
         Update: {
@@ -47,11 +53,14 @@ export type Database = {
           id?: string
           is_demo?: boolean
           location?: string | null
+          location_limit?: number | null
           logo_url?: string | null
           name?: string
           owner_id?: string | null
           owner_name?: string | null
           phone?: string | null
+          plan_id?: string | null
+          subscribed_at?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -63,6 +72,7 @@ export type Database = {
           card_id: string
           created_at: string
           id: string
+          logo_emoji: string | null
           logo_url: string | null
         }
         Insert: {
@@ -71,6 +81,7 @@ export type Database = {
           card_id: string
           created_at?: string
           id?: string
+          logo_emoji?: string | null
           logo_url?: string | null
         }
         Update: {
@@ -79,6 +90,7 @@ export type Database = {
           card_id?: string
           created_at?: string
           id?: string
+          logo_emoji?: string | null
           logo_url?: string | null
         }
         Relationships: [
@@ -452,6 +464,20 @@ export type Database = {
           stamps_this_year: number
           total_members: number
         }[]
+      }
+      register_business: {
+        Args: {
+          p_business_name: string
+          p_category: string
+          p_location: string
+          p_owner_name: string
+          p_phone: string
+        }
+        Returns: string
+      }
+      subscribe_business: {
+        Args: { p_business_id: string; p_plan_id: string }
+        Returns: undefined
       }
     }
     Enums: {
